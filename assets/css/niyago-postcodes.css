@@ -1,0 +1,29 @@
+/**
+ * Niyago Postcodes Styles
+ */
+
+/* Highlight animation for auto-filled fields */
+.niyago-postcodes-highlight {
+    animation: niyago-postcodes-pulse 1.5s ease-out;
+}
+
+@keyframes niyago-postcodes-pulse {
+    0% {
+        background-color: #d4edda;
+        border-color: #28a745;
+        box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.25);
+    }
+    100% {
+        background-color: inherit;
+        border-color: inherit;
+        box-shadow: none;
+    }
+}
+
+/* Ensure smooth transition back to normal state */
+.woocommerce-checkout input.input-text,
+.woocommerce-checkout select,
+.woocommerce-address-fields input.input-text,
+.woocommerce-address-fields select {
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
