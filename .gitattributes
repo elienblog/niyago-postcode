@@ -1,2 +1,14 @@
-# Auto detect text files and perform LF normalization
+# Normalise line endings.
 * text=auto
+
+# Development-only files. export-ignore keeps them out of `git archive`, which
+# is how the distributable zip is built — a customer should never receive build
+# scripts, package manifests or repo metadata.
+/.gitattributes  export-ignore
+/.gitignore      export-ignore
+/build.sh        export-ignore
+/sync.sh         export-ignore
+/package.json    export-ignore
+/package-dev.json export-ignore
+/LANDING-PAGE.md export-ignore
+/.github         export-ignore
