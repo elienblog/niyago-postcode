@@ -25,7 +25,7 @@ if (class_exists('Niyago_UI')) {
 
 class Niyago_UI {
 
-    const VERSION = '1.1.1';
+    const VERSION = '1.2.0';
 
     /**
      * Top-level menu slug shared by the whole suite.
@@ -161,6 +161,17 @@ class Niyago_UI {
             return;
         }
 
+        self::enqueue_assets();
+    }
+
+    /**
+     * Load the kit's stylesheet on a screen that is not one of ours.
+     *
+     * A plugin rendering a dashboard widget needs these styles on index.php,
+     * which the screen check above will never match. Safe to call repeatedly —
+     * wp_enqueue_style ignores a handle that is already registered.
+     */
+    public static function enqueue_assets(): void {
         $suffix = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
 
         wp_enqueue_style(
@@ -427,6 +438,91 @@ class Niyago_UI {
             esc_attr($tone),
             esc_html($text)
         );
+    }
+
+    // ============================================================
+    // PANELS — for status dashboards, which core has no pattern for
+    // ============================================================
+    //
+    // WordPress renders dashboards (Site Health, the dashboard widgets) with
+    // custom layout rather than form-tables, so a metrics screen is legitimately
+    // custom. What it should not be is custom *per plugin* — these live here so
+    // every Niyago dashboard is the same dashboard.
+
+    public static function panels_open(): void {
+        echo '<div class="niyago-panels">';
+    }
+
+    public static function panels_close(): void {
+        echo '</div>';
+    }
+
+    public static function panel_open(string $title = ''): void {
+        echo '<section class="niyago-panel">';
+
+        if ($title !== '') {
+            printf('<h3 class="niyago-panel__title">%s</h3>', esc_html($title));
+        }
+
+        echo '<div class="niyago-panel__body">';
+    }
+
+    public static function panel_close(): void {
+        echo '</div></section>';
+    }
+
+    /**
+     * The headline number in a panel.
+     *
+     * @param string $tone default|success|warning|danger
+     */
+    public static function metric(string $value, string $label, string $tone = 'default'): void {
+        printf(
+            '<div class="niyago-metric niyago-metric--%s"><span class="niyago-metric__value">%s</span><span class="niyago-metric__label">%s</span></div>',
+            esc_attr($tone),
+            esc_html($value),
+            esc_html($label)
+        );
+    }
+
+    /**
+     * A label/value line under a metric.
+     */
+    public static function metric_row(string $label, string $value): void {
+        printf(
+            '<div class="niyago-metric-row"><span>%s</span><strong>%s</strong></div>',
+            esc_html($label),
+            esc_html($value)
+        );
+    }
+
+    /**
+     * Simple bar chart, for hourly figures. Values are scaled against the
+     * largest bar, so an empty series renders flat rather than dividing by zero.
+     *
+     * @param array<int, array{label: string, value: float, title?: string}> $bars
+     */
+    public static function bar_chart(array $bars): void {
+        $max = 0.0;
+
+        foreach ($bars as $bar) {
+            $max = max($max, (float) $bar['value']);
+        }
+
+        echo '<div class="niyago-chart">';
+
+        foreach ($bars as $bar) {
+            $height = $max > 0 ? round(((float) $bar['value'] / $max) * 100) : 0;
+
+            printf(
+                '<div class="niyago-chart__col" title="%s"><div class="niyago-chart__bar" style="height:%d%%"></div><span class="niyago-chart__label">%s</span></div>',
+                esc_attr($bar['title'] ?? ($bar['label'] . ': ' . $bar['value'])),
+                (int) $height,
+                esc_html($bar['label'])
+            );
+        }
+
+        echo '</div>';
     }
 
     /**
