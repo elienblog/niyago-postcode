@@ -190,7 +190,7 @@ class Niyago_Postcodes {
         ?>
         <fieldset>
             <?php foreach ($available_countries as $code => $name): ?>
-            <label style="display: block; margin-bottom: 5px;">
+            <label class="niyago-block-label">
                 <input type="checkbox" name="niyago_postcodes_options[enabled_countries][]" value="<?php echo esc_attr($code); ?>" <?php checked(in_array($code, (array)$value)); ?>>
                 <?php echo esc_html($name); ?>
             </label>
