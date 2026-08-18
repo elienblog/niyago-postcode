@@ -3,7 +3,7 @@
  * Plugin Name: Niyago Postcodes
  * Plugin URI: https://gengbiz.my
  * Description: Auto-fill city and state when postcode is entered in WooCommerce checkout.
- * Version: 1.0.4
+ * Version: 1.0.5
  * Author: Gengbiz
  * Author URI: https://gengbiz.my
  * License: GPL v2 or later
@@ -20,7 +20,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('NIYAGO_POSTCODES_VERSION', '1.0.4');
+define('NIYAGO_POSTCODES_VERSION', '1.0.5');
 define('NIYAGO_POSTCODES_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('NIYAGO_POSTCODES_PLUGIN_URL', plugin_dir_url(__FILE__));
 
