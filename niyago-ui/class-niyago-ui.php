@@ -25,7 +25,7 @@ if (class_exists('Niyago_UI')) {
 
 class Niyago_UI {
 
-    const VERSION = '1.2.0';
+    const VERSION = '1.2.1';
 
     /**
      * Top-level menu slug shared by the whole suite.

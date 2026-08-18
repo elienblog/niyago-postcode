@@ -271,3 +271,87 @@
   white-space: nowrap;
   overflow: hidden;
 }
+
+/* ---------- small utilities ----------
+   Each of these replaces an inline style that was repeated across the suite. */
+
+/* Required-field marker beside a label. */
+.niyago-required {
+  color: var(--niyago-danger);
+}
+
+/* A checkbox or radio sitting inline with its own text, inside a wider row. */
+.niyago-inline-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+/* Image preview under an upload field. One size for the whole suite. */
+.niyago-logo-preview img {
+  max-width: 200px;
+  max-height: 80px;
+  width: auto;
+  display: block;
+}
+
+/* Remove control at the end of a repeating row. */
+.niyago-ui .niyago-remove {
+  color: var(--niyago-danger);
+}
+
+.niyago-ui .niyago-remove:hover {
+  border-color: var(--niyago-danger);
+}
+
+/* Field inside a repeating row — narrower than a full-width regular-text. */
+.niyago-ui .niyago-agent-field {
+  width: 180px;
+  max-width: 100%;
+}
+
+/* Label stacked above its control. */
+.niyago-block-label {
+  display: block;
+  margin-bottom: 6px;
+}
+
+/* Radio/checkbox labels sitting side by side on one line. */
+.niyago-spaced {
+  margin-right: 16px;
+}
+
+/* Narrow numeric or colour input. */
+.niyago-ui .niyago-input-sm {
+  width: 100px;
+}
+
+/* Description text carrying a warning. */
+.niyago-warning-text {
+  color: var(--niyago-danger);
+}
+
+/* Field that fills its column — used in the post-editor sidebar, where the
+   available width is narrow and fixed. */
+.niyago-field-full {
+  width: 100%;
+}
+
+/* Colour input in a narrow sidebar, tall enough to read the swatch. */
+.niyago-field-swatch {
+  width: 100%;
+  height: 40px;
+}
+
+/* Description text confirming something is working. */
+.niyago-ok-text {
+  color: var(--niyago-success);
+}
+
+/* Sub-heading that starts a new group inside a settings form. */
+.niyago-ui .niyago-subsection {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid var(--niyago-border);
+}
