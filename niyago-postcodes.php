@@ -23,6 +23,14 @@ define('NIYAGO_POSTCODES_VERSION', '1.0.4');
 define('NIYAGO_POSTCODES_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('NIYAGO_POSTCODES_PLUGIN_URL', plugin_dir_url(__FILE__));
 
+/**
+ * Shared admin UI for the Niyago suite.
+ *
+ * Bundled rather than depended on: every Niyago plugin ships its own copy and
+ * the newest one wins, so this plugin stays installable on its own.
+ */
+require_once __DIR__ . '/niyago-ui/loader.php';
+
 class Niyago_Postcodes {
 
     private static $instance = null;
@@ -88,6 +96,24 @@ class Niyago_Postcodes {
      * Admin menu
      */
     public function add_admin_menu() {
+        // Registered through the shared kit so every Niyago plugin is found in
+        // one place. Falls back to the WooCommerce submenu if the kit is
+        // missing, so the settings are never unreachable.
+        if (class_exists('Niyago_UI')) {
+            Niyago_UI::register_page([
+                'slug' => 'niyago-postcodes',
+                'title' => 'Postcodes',
+                'menu_title' => 'Postcodes',
+                'plugin' => 'Niyago Postcodes',
+                'version' => NIYAGO_POSTCODES_VERSION,
+                'capability' => 'manage_woocommerce',
+                'position' => 40,
+                'callback' => [$this, 'render_settings_page'],
+            ]);
+
+            return;
+        }
+
         add_submenu_page(
             'woocommerce',
             'Postcodes',
@@ -200,18 +226,25 @@ class Niyago_Postcodes {
      * Render settings page
      */
     public function render_settings_page() {
+        // The page wrapper and heading come from the shared UI kit when present.
+        $has_ui = class_exists('Niyago_UI');
+
+        if (!$has_ui) {
+            printf('<div class="wrap"><h1>%s</h1>', esc_html(get_admin_page_title()));
+        }
         ?>
-        <div class="wrap">
-            <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
-            <form action="options.php" method="post">
-                <?php
-                settings_fields('niyago_postcodes_options');
-                do_settings_sections('niyago-postcodes');
-                submit_button('Save');
-                ?>
-            </form>
-        </div>
+        <form action="options.php" method="post">
+            <?php
+            settings_fields('niyago_postcodes_options');
+            do_settings_sections('niyago-postcodes');
+            submit_button('Save');
+            ?>
+        </form>
         <?php
+
+        if (!$has_ui) {
+            echo '</div>';
+        }
     }
 
     /**

@@ -1,0 +1,166 @@
+/**
+ * Niyago UI — the small amount of styling core has no equivalent for.
+ *
+ * Everything else (rows, inputs, buttons, notices, tabs) uses WordPress' and
+ * WooCommerce's own markup and therefore their own styles. That is deliberate:
+ * a shop owner should recognise every control, the admin colour scheme they
+ * chose should still apply, and a future WordPress restyle should carry us
+ * along rather than leave us looking dated.
+ *
+ * Accent comes from --wp-admin-theme-color, which follows the user's admin
+ * colour scheme. Radii come from WooCommerce's own tokens. Nothing here invents
+ * a colour that core has not already committed to.
+ */
+
+.niyago-ui {
+  --niyago-accent: var(--wp-admin-theme-color, #2271b1);
+  --niyago-border: #dcdcde;
+  --niyago-surface: #fff;
+  --niyago-muted: var(--wc-subtext, #767676);
+  --niyago-radius: var(--wc-card-border-radius, 8px);
+  --niyago-radius-sm: var(--wc-form-border-radius, 4px);
+
+  --niyago-success: var(--wc-green, #008a20);
+  --niyago-warning: var(--wc-orange, #996800);
+  --niyago-danger: var(--wc-red, #a00);
+}
+
+/* Version chip next to the page title, matching core's inline heading rhythm. */
+.niyago-version {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #f0f0f1;
+  color: var(--niyago-muted);
+  font-size: 12px;
+  font-weight: 500;
+  vertical-align: middle;
+}
+
+.niyago-page-desc {
+  max-width: 700px;
+  margin-top: 12px;
+  font-size: 13px;
+}
+
+/* ---------- stats ----------
+   No core equivalent. Borrows the .card look core already uses for panels. */
+
+.niyago-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  max-width: 800px;
+  margin: 16px 0 24px;
+}
+
+.niyago-stat {
+  padding: 14px 16px;
+  border: 1px solid var(--niyago-border);
+  border-radius: var(--niyago-radius);
+  background: var(--niyago-surface);
+}
+
+.niyago-stat__value {
+  display: block;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.niyago-stat__label {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--niyago-muted);
+}
+
+.niyago-stat--success .niyago-stat__value { color: var(--niyago-success); }
+.niyago-stat--warning .niyago-stat__value { color: var(--niyago-warning); }
+.niyago-stat--danger  .niyago-stat__value { color: var(--niyago-danger); }
+
+/* ---------- badge ----------
+   Small status pill. Core has no inline badge for "Active"/"Paused". */
+
+.niyago-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.8;
+  background: #f0f0f1;
+  color: #3c434a;
+}
+
+.niyago-badge--success { background: #edfaef; color: var(--niyago-success); }
+.niyago-badge--warning { background: #fcf9e8; color: var(--niyago-warning); }
+.niyago-badge--danger  { background: #fcf0f1; color: var(--niyago-danger); }
+.niyago-badge--muted   { background: #f0f0f1; color: var(--niyago-muted); }
+
+/* ---------- placeholder tokens ----------
+   Reference list under a message template field. */
+
+.niyago-tokens {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 2px 16px;
+  margin: 8px 0 0;
+  max-width: 700px;
+}
+
+.niyago-tokens li {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.9;
+}
+
+.niyago-tokens code {
+  font-size: 12px;
+  padding: 1px 5px;
+}
+
+.niyago-tokens span {
+  color: var(--niyago-muted);
+}
+
+/* ---------- destructive button ----------
+   Core styles .button and .button-primary; it has no danger variant for a
+   real <button>, so this is the one control we colour ourselves. */
+
+.niyago-ui .niyago-button-danger {
+  color: var(--niyago-danger);
+  border-color: var(--niyago-danger);
+}
+
+.niyago-ui .niyago-button-danger:hover,
+.niyago-ui .niyago-button-danger:focus {
+  background: var(--niyago-danger);
+  border-color: var(--niyago-danger);
+  color: #fff;
+}
+
+/* ---------- actions row ----------
+   Core's .submit already spaces this; only stop the buttons colliding. */
+
+.niyago-ui .niyago-actions .button + .button {
+  margin-left: 6px;
+}
+
+/* ---------- repeating rows ----------
+   Used by the COD agent list: a row of fields with a remove control. */
+
+.niyago-repeat-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+@media screen and (max-width: 782px) {
+  .niyago-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+}
