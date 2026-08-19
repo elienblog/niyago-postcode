@@ -29,7 +29,7 @@ if (!is_array($niyago_ui_versions)) {
     $niyago_ui_versions = [];
 }
 
-$niyago_ui_versions['1.2.1'] = __DIR__ . '/class-niyago-ui.php';
+$niyago_ui_versions['1.3.0'] = __DIR__ . '/class-niyago-ui.php';
 
 // Only the first copy to be included defines the boot function; the rest just
 // add themselves to the list above.

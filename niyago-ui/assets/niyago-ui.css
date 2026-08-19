@@ -60,6 +60,9 @@
   border: 1px solid var(--niyago-border);
   border-radius: var(--niyago-radius);
   background: var(--niyago-surface);
+  /* Grid children default to min-width:auto, which is what actually lets a
+     long value push out past the tile instead of wrapping inside it. */
+  min-width: 0;
 }
 
 .niyago-stat__value {
@@ -67,6 +70,7 @@
   font-size: 22px;
   font-weight: 600;
   line-height: 1.2;
+  overflow-wrap: anywhere;
 }
 
 .niyago-stat__label {
@@ -79,6 +83,27 @@
 .niyago-stat--success .niyago-stat__value { color: var(--niyago-success); }
 .niyago-stat--warning .niyago-stat__value { color: var(--niyago-warning); }
 .niyago-stat--danger  .niyago-stat__value { color: var(--niyago-danger); }
+
+/* A long value — a Redis key prefix, a path, a connection string — is
+   reference data, not a headline number. Set at 22px it overflows the tile
+   and, next to "Connected", reads as broken. Shown small and monospaced it
+   fits, stays readable, and looks deliberate. Applied by the modifier the
+   PHP adds, so the caller never has to know how long a customer's value is.
+   Clamped to three lines with the full string on the title attribute. */
+.niyago-stat--long .niyago-stat__value,
+.niyago-metric--long .niyago-metric__value {
+  font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.5;
+  /* Key prefixes contain no spaces, so only break-all can wrap them. */
+  word-break: break-all;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 
 /* ---------- badge ----------
    Small status pill. Core has no inline badge for "Active"/"Paused". */
@@ -206,6 +231,10 @@
   font-size: 30px;
   font-weight: 600;
   line-height: 1.1;
+  /* The panel is overflow:hidden, so without this a long value is silently
+     cut off rather than wrapped — worse than overflowing, because nothing
+     on screen says data is missing. */
+  overflow-wrap: anywhere;
 }
 
 .niyago-metric__label {
@@ -230,6 +259,15 @@
 
 .niyago-metric-row span {
   color: var(--niyago-muted);
+  /* Keeps the label readable when the value beside it is long, instead of
+     the value shoving it out of the row. */
+  flex: 0 0 auto;
+}
+
+.niyago-metric-row strong {
+  min-width: 0;
+  text-align: right;
+  overflow-wrap: anywhere;
 }
 
 /* ---------- bar chart ---------- */

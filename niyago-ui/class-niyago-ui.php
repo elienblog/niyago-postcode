@@ -25,12 +25,19 @@ if (class_exists('Niyago_UI')) {
 
 class Niyago_UI {
 
-    const VERSION = '1.2.1';
+    const VERSION = '1.3.0';
 
     /**
      * Top-level menu slug shared by the whole suite.
      */
     const MENU_SLUG = 'niyago';
+
+    /**
+     * Above this many characters a stat or metric value is treated as
+     * reference data rather than a headline, and rendered small and
+     * monospaced so it cannot break its container.
+     */
+    const LONG_VALUE_CHARS = 22;
 
     /**
      * @var array<int, array<string, mixed>>
@@ -477,9 +484,13 @@ class Niyago_UI {
      * @param string $tone default|success|warning|danger
      */
     public static function metric(string $value, string $label, string $tone = 'default'): void {
+        $long = self::is_long_value($value);
+
         printf(
-            '<div class="niyago-metric niyago-metric--%s"><span class="niyago-metric__value">%s</span><span class="niyago-metric__label">%s</span></div>',
+            '<div class="niyago-metric niyago-metric--%s%s"><span class="niyago-metric__value"%s>%s</span><span class="niyago-metric__label">%s</span></div>',
             esc_attr($tone),
+            $long ? ' niyago-metric--long' : '',
+            $long ? ' title="' . esc_attr($value) . '"' : '',
             esc_html($value),
             esc_html($label)
         );
@@ -535,15 +546,35 @@ class Niyago_UI {
         echo '<div class="niyago-stats">';
 
         foreach ($stats as $stat) {
+            $value = (string) ($stat['value'] ?? '');
+            $long  = self::is_long_value($value) || !empty($stat['mono']);
+
             printf(
-                '<div class="niyago-stat niyago-stat--%s"><span class="niyago-stat__value">%s</span><span class="niyago-stat__label">%s</span></div>',
+                '<div class="niyago-stat niyago-stat--%s%s"><span class="niyago-stat__value"%s>%s</span><span class="niyago-stat__label">%s</span></div>',
                 esc_attr($stat['tone'] ?? 'default'),
-                esc_html($stat['value']),
-                esc_html($stat['label'])
+                $long ? ' niyago-stat--long' : '',
+                $long ? ' title="' . esc_attr($value) . '"' : '',
+                esc_html($value),
+                esc_html($stat['label'] ?? '')
             );
         }
 
         echo '</div>';
+    }
+
+    /**
+     * Whether a value is too long to sit at headline size.
+     *
+     * Tiles are built for words like "Connected". A customer's Redis key
+     * prefix or file path is reference data that happens to live in the same
+     * row, and at 22px it escapes the tile and reads as a broken plugin.
+     * The component decides rather than the caller, because no caller can
+     * know how long a given site's value will turn out to be.
+     */
+    private static function is_long_value(string $value): bool {
+        return function_exists('mb_strlen')
+            ? mb_strlen($value) > self::LONG_VALUE_CHARS
+            : strlen($value) > self::LONG_VALUE_CHARS;
     }
 
     // ============================================================
